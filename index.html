@@ -1,0 +1,1337 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Outubro 2026 — Cronograma equilibrado</title>
+<style>
+:root{
+  --bg:#f4f7f5; --card:#fff; --ink:#25312c; --muted:#68756f; --line:#dfe5e1;
+  --accent:#315c4a; --shadow:0 8px 24px rgba(33,54,45,.08);
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font-family:Inter,system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif}
+header{padding:28px 28px 12px;max-width:1500px;margin:auto}
+h1{margin:0 0 6px;font-size:30px;letter-spacing:-.03em}
+.subtitle{margin:0;color:var(--muted);max-width:980px;line-height:1.5}
+.wrap{max-width:1500px;margin:auto;padding:12px 28px 38px}
+.topbar{display:grid;grid-template-columns:repeat(5,minmax(150px,1fr));gap:12px;margin-bottom:16px}
+.metric{background:var(--card);border:1px solid var(--line);border-radius:16px;padding:15px;box-shadow:var(--shadow)}
+.metric b{display:block;font-size:21px;margin-bottom:3px}.metric span{font-size:12px;color:var(--muted)}
+.controls{display:flex;gap:10px;flex-wrap:wrap;margin:12px 0 18px;align-items:center}
+button{border:1px solid var(--line);background:var(--card);padding:9px 12px;border-radius:11px;cursor:pointer;font-weight:650;color:var(--ink)}
+button:hover{border-color:#b9c8bf;background:#fbfcfb}
+button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
+.main{display:grid;grid-template-columns:minmax(0,1fr) 270px;gap:12px;align-items:start}
+.calendar-card,.side-card,.suggest,.pbox{background:var(--card);border:1px solid var(--line);border-radius:18px;box-shadow:var(--shadow)}
+.calendar-card{padding:14px}
+.weekdays,.calendar{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:7px}
+.weekdays div{font-size:11px;color:var(--muted);font-weight:800;text-transform:uppercase;padding:5px 5px 8px}
+.day{min-height:138px;border-radius:13px;border:1px solid var(--line);padding:9px;cursor:pointer;background:linear-gradient(180deg,#fff,#fbfcfb);overflow:hidden;transition:.15s ease}
+.day:hover{transform:translateY(-1px)}
+.day.empty{background:transparent;border:none;cursor:default}
+.day.drag-over{outline:3px dashed var(--accent);outline-offset:-3px}
+.day.today{box-shadow:inset 0 0 0 2px var(--accent)}
+.day.special.today{box-shadow:none}
+.day.commitment-day{background:#ffd2cf;border:none}
+.day.assessment-day{background:#f4bfd8;border:none}
+.day.holiday-day{background:#ffe374;border:none}
+.day.commitment-day .event,.day.assessment-day .event,.day.holiday-day .event{box-shadow:0 1px 0 rgba(0,0,0,.05)}
+.day{position:relative}
+.day-special-title{font-weight:850;font-size:9.5px;line-height:1.05;white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:none;min-width:0;flex:1}
+.num{font-weight:850;font-size:11px;display:flex;justify-content:flex-start;align-items:flex-start;gap:6px;white-space:normal;padding-right:72px;min-width:0}
+.day-special-title{font-weight:850;font-size:clamp(9px,1vw,11px);line-height:1.12;white-space:normal;overflow:visible;text-overflow:clip;word-break:keep-all;overflow-wrap:normal;min-width:0;flex:1}
+
+.wellbeing-top{position:absolute;top:5px;right:7px;display:flex;gap:5px;align-items:center;z-index:3;pointer-events:none}
+.wellbeing-top span{display:inline-flex;align-items:center;justify-content:center;font-size:24px;line-height:1}
+.wellbeing-drag{pointer-events:none;cursor:default}
+.wellbeing-drag:active{cursor:grabbing}
+.emoji-check{font-size:11px;font-weight:900;margin-left:-2px;margin-top:-10px}
+.aggregate-attention{margin-left:4px;font-weight:900}
+.events{display:flex;flex-direction:column;gap:5px;margin-top:8px}
+.event{font-size:10px;line-height:1.18;padding:5px 8px;border-radius:999px;cursor:grab;box-shadow:0 1px 0 rgba(0,0,0,.05);display:block;white-space:normal;word-break:normal;overflow-wrap:normal;hyphens:none}
+.event:active{cursor:grabbing}
+.calendar .event.user-draggable{cursor:grab;touch-action:none}
+.event.user-draggable:hover{filter:brightness(1.04);transform:translateY(-1px)}
+.event .status-check{margin-left:5px;font-weight:900}
+.event.status-rescheduled{text-decoration:line-through;opacity:.45}
+.status-check{display:inline-block;margin-left:4px;font-size:12px;line-height:1}
+.emoji-check{font-size:12px;font-weight:900;margin-left:-3px;margin-top:-10px}
+.event.status-done{box-shadow:inset 0 0 0 2px rgba(255,255,255,.72)}
+.event.status-done .status-check{color:inherit}
+.subject-Física{background:#ff5a36;color:#fff}
+.subject-Grafos{background:#7b4dff;color:#fff}
+.subject-Modelagem{background:#00a8c6;color:#fff}
+.subject-Tráfego{background:#ff2f92;color:#fff}
+.subject-TNM{background:#ffb000;color:#2a2300}
+.subject-Ergonomia{background:#17b978;color:#fff}
+.subject-POII{background:#8f5cff;color:#fff}
+.subject-TCC{background:#1e7aeb;color:#fff}
+.subject-Compromisso{background:rgba(255,255,255,.32);color:#5a2220}
+.subject-Prova,.subject-Entrega{background:rgba(255,255,255,.28);color:#54243b}
+.subject-Feriado{background:rgba(255,255,255,.28);color:#5e4e00}
+.event.wellbeing{background:#eaf3f4;color:#294b55}
+.event.subject-Lazer{background:#36b9d6;color:#fff}
+.event.subject-Exercício{background:#22a06b;color:#fff}
+.event.subject-Novidade{background:#f39a2e;color:#fff}
+.subject-Exercício{background:#22a06b;color:#fff}
+.subject-Novidade{background:#f39a2e;color:#fff}
+
+.side-card{padding:13px;position:sticky;top:14px;font-size:11px}
+.side-card h2{margin:0 0 5px;font-size:17px}.side-card .date{color:var(--muted);font-size:11px;margin-bottom:10px}
+.detail{margin:0;padding:0;list-style:none}.detail li{padding:10px 0;border-bottom:1px solid var(--line);font-size:13px}
+.detail small{display:block;color:var(--muted);margin-top:4px;line-height:1.35}
+.badge{display:inline-flex;align-items:center;gap:5px;border-radius:999px;padding:3px 8px;font-size:10px;font-weight:800;background:#eef2ef;color:#466052}
+.section-title{margin:26px 0 10px;font-size:18px}
+.info{background:#eef4f0;border:1px solid #d5e3da;padding:13px 15px;border-radius:14px;font-size:12px;line-height:1.5}
+.warning{background:#fff6e7;border-color:#ead7ad}
+.mini-heat{display:grid;grid-template-columns:repeat(7,18px);gap:4px;margin-top:9px}
+.mini-heat .mh-blank{width:18px;height:18px}
+.mini-heat i{width:18px;height:18px;border-radius:4px;display:grid;place-items:center;font-size:8px;font-weight:800;color:#26332d}
+.heat-legend{display:flex;gap:7px;align-items:center;margin-top:7px;color:var(--muted);font-size:10px}
+.heat-legend i{width:12px;height:12px;border-radius:3px;display:inline-block}
+.suggestions{display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin-top:18px}
+.suggest,.pbox{padding:16px;box-shadow:none}
+.suggest h3{margin:0 0 8px;font-size:15px}.suggest p{font-size:12px;color:var(--muted);line-height:1.45;margin:0 0 8px}
+.suggest ul{margin:0;padding-left:17px;font-size:12px;line-height:1.65}
+.pattern{display:grid;grid-template-columns:repeat(5,1fr);gap:10px}
+.pbox h4{margin:0 0 8px;font-size:13px}.pbox label{display:block;font-size:10px;color:var(--muted);margin:8px 0 4px;font-weight:700}
+select,input[type=number],textarea{width:100%;border:1px solid var(--line);border-radius:9px;padding:8px;background:#fff;font:inherit}
+textarea{min-height:58px;resize:vertical}
+.footer{margin-top:18px;font-size:11px;color:var(--muted);line-height:1.5}
+.subject-legend{display:flex;flex-wrap:wrap;gap:7px;margin-top:8px}
+.subject-legend span{padding:5px 8px;border-radius:999px;font-size:10px;font-weight:800}
+.drag-help{font-size:11px;color:var(--muted);padding:3px 0}
+@media(max-width:1050px){.main{grid-template-columns:1fr}.side-card{position:static}.topbar{grid-template-columns:repeat(3,1fr)}}
+@media(max-width:760px){header,.wrap{padding-left:12px;padding-right:12px}h1{font-size:25px}.weekdays,.calendar{gap:4px}.day{min-height:105px;padding:6px}.event{font-size:10px;padding:5px}.suggestions{grid-template-columns:1fr}.pattern{grid-template-columns:1fr 1fr}}
+@media(max-width:480px){.topbar{grid-template-columns:1fr 1fr}.day{min-height:88px}.event:nth-child(n+3){display:none}.pattern{grid-template-columns:1fr}}
+
+.event.special-pill-commitment{background:#b9342b!important;color:#fff!important}
+.event.special-pill-assessment{background:#a62d6f!important;color:#fff!important}
+.event.special-pill-holiday{background:#c78b00!important;color:#fff!important}
+.day-special-title{max-width:calc(100% - 20px)}
+.wellbeing-top{padding:2px 0 3px}
+.wellbeing-top span{font-size:13px}
+.wellbeing-top .emoji{font-size:22px;line-height:1}
+.day .events{max-height:112px;overflow:auto;padding-right:2px}
+.pill-delete{margin-left:6px;border:none!important;background:rgba(255,255,255,.25)!important;color:inherit!important;padding:2px 5px!important;font-size:10px!important;line-height:1!important}
+.pill-edit-note{font-size:10px;color:var(--muted);margin-top:4px}
+.add-panel{margin:12px 0 18px;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px;box-shadow:var(--shadow)}
+.add-grid{display:grid;grid-template-columns:repeat(4,minmax(120px,1fr));gap:8px}
+.add-grid label{font-size:10px;color:var(--muted);font-weight:800}
+.add-grid input,.add-grid select{width:100%;padding:8px;border:1px solid var(--line);border-radius:9px;background:#fff}
+.checklist{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.check-item{display:flex;gap:8px;align-items:flex-start;background:#f8faf9;border:1px solid var(--line);border-radius:12px;padding:10px;font-size:12px;line-height:1.35}
+.check-item input{margin-top:2px}
+@media(max-width:900px){.add-grid{grid-template-columns:repeat(2,1fr)}.checklist{grid-template-columns:1fr}}
+
+/* REGRA ABSOLUTA DE TEXTO:
+   palavras nunca são quebradas no meio. Quebra de linha somente em espaços.
+*/
+.calendar,
+.calendar *,
+.weekdays,
+.weekdays *,
+.day,
+.day *,
+.event,
+.event *,
+.day-special-title,
+.wellbeing-top,
+.wellbeing-top *,
+.side-card,
+.side-card * {
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  overflow-wrap: unset !important;
+  hyphens: none !important;
+}
+.calendar .event,
+.calendar .event b,
+.calendar .day-special-title {
+  white-space: normal !important;
+  word-break: keep-all !important;
+  overflow-wrap: normal !important;
+  hyphens: none !important;
+}
+
+/* Long single words stay intact rather than being split.
+   The smaller type lets ordinary phrases wrap inside the cell. */
+.calendar .event {
+  font-size: 10px !important;
+  line-height: 1.18 !important;
+}
+.calendar .day-special-title {
+  font-size: 9px !important;
+  line-height: 1.05 !important;
+}
+
+.calendar .event.dragging-pointer{
+  position:fixed !important;
+  z-index:9999 !important;
+  pointer-events:none !important;
+  width:max-content !important;
+  max-width:240px !important;
+  box-shadow:0 12px 30px rgba(0,0,0,.22) !important;
+  transform:scale(1.04) !important;
+}
+.calendar .day.drag-target{
+  outline:3px solid #315c4a !important;
+  outline-offset:-3px !important;
+}
+.drag-ghost{
+  position:fixed;
+  z-index:10000;
+  pointer-events:none;
+  border-radius:999px;
+  opacity:.92;
+  padding:6px 10px;
+  font-size:11px;
+  font-weight:800;
+  box-shadow:0 10px 25px rgba(0,0,0,.22);
+}
+
+.auth-overlay{position:fixed;inset:0;background:rgba(27,39,34,.62);z-index:50000;display:flex;align-items:center;justify-content:center;padding:18px}
+.auth-card{width:min(430px,100%);background:#fff;border-radius:22px;padding:24px;box-shadow:0 24px 80px rgba(0,0,0,.28)}
+.auth-card h2{margin:0 0 6px;font-size:22px}
+.auth-card p{margin:0 0 16px;color:#68756f;font-size:12px;line-height:1.5}
+.auth-card label{display:block;margin:10px 0 5px;font-size:11px;font-weight:800;color:#4c5c54}
+.auth-card input{width:100%;border:1px solid #dfe5e1;border-radius:10px;padding:10px;font:inherit}
+.auth-actions{display:flex;gap:8px;margin-top:14px}
+.auth-actions button{flex:1}
+.auth-msg{margin-top:10px;padding:9px 10px;border-radius:10px;background:#eef4f0;font-size:11px;line-height:1.4;display:none}
+.cloud-user{font-size:11px;color:#52645a}
+.cloud-ok{background:#e8f7ed;color:#21683b}
+.cloud-warn{background:#fff5dc;color:#795800}
+</style>
+</head>
+
+<body>
+<div class="auth-overlay" id="authOverlay">
+  <div class="auth-card">
+    <h2>Seu calendário sincronizado</h2>
+    <p>Entre com sua conta para manter o mesmo calendário no computador e no celular. As alterações são salvas na nuvem.</p>
+
+    <label for="authEmail">E-mail</label>
+    <input id="authEmail" type="email" autocomplete="email" placeholder="seu@email.com">
+
+    <label for="authPassword">Senha</label>
+    <input id="authPassword" type="password" autocomplete="current-password" placeholder="Mínimo de 6 caracteres">
+
+    <div class="auth-actions">
+      <button class="primary" onclick="entrar()">Entrar</button>
+      <button onclick="criarConta()">Criar conta</button>
+    </div>
+    <div class="auth-msg" id="authMsg"></div>
+
+    <p style="margin-top:14px;font-size:10px">Na primeira utilização, crie uma conta. Depois, use o mesmo e-mail e senha em todos os dispositivos.</p>
+  </div>
+</div>
+
+<header>
+  <h1>Outubro 2026 — cronograma equilibrado</h1>
+  <p class="subtitle">Calendário adaptável para distribuir estudo, compromissos e recuperação. Tarefas coloridas podem ser arrastadas para outra data quando as regras permitirem.</p>
+</header>
+
+<div class="wrap">
+  <div class="topbar" id="metrics"></div>
+
+  <div class="info warning">
+    <b>Pluris:</b> 05–08/10 são dias bloqueados para outras atividades. O dia 07/10 mantém somente o bloco de Física.
+    O Pluris também conta como a novidade daquela semana.
+  </div>
+
+  <div class="controls">
+    <button class="primary" onclick="recalcular()">Recalcular itens “não realizados”</button>
+    <button onclick="mostrarAdicionar()">＋ Criar atividade / compromisso</button>
+    <button onclick="exportarProgresso()">Exportar progresso</button>
+    <button onclick="limparProgresso()">Limpar progresso local</button>
+    <span class="badge">↔ Arraste qualquer pílula para qualquer data</span><span id="cloudStatus" class="badge cloud-warn">Conectando...</span>
+    <span id="cloudUser" class="cloud-user"></span>
+    <button id="logoutBtn" onclick="sair()" style="display:none">Sair</button>
+  </div>
+
+  <div class="add-panel" id="addPanel" style="display:none">
+    <b>Nova atividade ou compromisso</b>
+    <div class="add-grid" style="margin-top:10px">
+      <div><label>Data</label><input id="newDay" type="number" min="1" max="31" value="2"></div>
+      <div><label>Tipo</label>
+        <select id="newType">
+          <option value="commitment">Compromisso</option>
+          <option value="wellbeing">Atividade física</option>
+          <option value="wellbeing">Lazer</option>
+          <option value="wellbeing">Novidade</option>
+          <option value="study">Estudo</option>
+        </select>
+      </div>
+      <div><label>Categoria</label>
+        <select id="newTag">
+          <option value="Compromisso">Compromisso</option>
+          <option value="Exercício">Exercício</option>
+          <option value="Lazer">Lazer</option>
+          <option value="Novidade">Novidade</option>
+          <option value="Física">Física</option>
+          <option value="Grafos">Grafos</option>
+          <option value="Modelagem">Modelagem</option>
+          <option value="Tráfego">Tráfego</option>
+          <option value="TNM">TNM</option>
+          <option value="Ergonomia">Ergonomia</option>
+          <option value="POII">POII</option>
+          <option value="TCC">TCC</option>
+        </select>
+      </div>
+      <div><label>Nome / descrição</label><input id="newTitle" type="text" placeholder="Ex.: academia, reunião, estudar..."></div>
+    </div>
+    <div style="display:flex;gap:8px;margin-top:10px">
+      <button class="primary" onclick="criarItem()">Criar</button>
+      <button onclick="ocultarAdicionar()">Cancelar</button>
+    </div>
+  </div>
+
+  <div class="main">
+    <section class="calendar-card">
+      <div class="weekdays">
+        <div>Seg</div><div>Ter</div><div>Qua</div><div>Qui</div><div>Sex</div><div>Sáb</div><div>Dom</div>
+      </div>
+      <div class="calendar" id="calendar"></div>
+    </section>
+
+    <aside class="side-card">
+      <h2 id="selectedTitle">2 de outubro</h2>
+      <div class="date" id="selectedDate">Sexta-feira · hoje</div>
+      <div id="selectedLoad"></div>
+      <ul class="detail" id="details"></ul>
+      <div class="footer">
+        <b>Como funciona:</b> “Realizado” adiciona ✓ ao lado da pílula. “Não realizado” risca a pílula original
+        e cria imediatamente uma nova em uma data válida. No arrastar manual, você pode mover qualquer atividade móvel
+        para qualquer data; as restrições são aplicadas apenas ao remanejamento automático.
+      </div>
+    </aside>
+  </div>
+
+  <h2 class="section-title">Mapa de calor da carga</h2>
+  <div class="info">
+    A célula do calendário não mostra o número da carga. A miniatura abaixo reproduz o mês como um pequeno calendário,
+    usando cores vivas para mostrar a carga geral de cada dia:
+    <div class="mini-heat" id="miniHeat"></div>
+    <div class="heat-legend">
+      <i style="background:#57d978"></i> tranquilo
+      <i style="background:#f0f33b"></i> atenção
+      <i style="background:#ff9f1c"></i> alta
+      <i style="background:#ff3b30"></i> muito alta
+    </div>
+  </div>
+
+  <h2 class="section-title">Cores das matérias</h2>
+  <div class="info">
+    <div class="subject-legend">
+      <span style="background:#ff5a36;color:#fff">Física</span>
+      <span style="background:#7b4dff;color:#fff">Grafos</span>
+      <span style="background:#00a8c6;color:#fff">Modelagem</span>
+      <span style="background:#ff2f92;color:#fff">Tráfego</span>
+      <span style="background:#ffb000;color:#2a2300">TNM</span>
+      <span style="background:#17b978;color:#fff">Ergonomia</span>
+      <span style="background:#8f5cff;color:#fff">POII</span>
+      <span style="background:#1e7aeb;color:#fff">TCC</span>
+    </div>
+  </div>
+
+  <h2 class="section-title">Sugestões para os momentos reservados</h2>
+  <div class="info">
+    Checklist de opções para escolher quando um momento de atividade física, lazer ou novidade estiver reservado. Marcar aqui não cria automaticamente uma atividade no calendário.
+  </div>
+  <div class="checklist">
+    <label class="check-item"><input type="checkbox"> 🏃 Caminhada leve de 20–40 min</label>
+    <label class="check-item"><input type="checkbox"> 🚲 Bicicleta leve</label>
+    <label class="check-item"><input type="checkbox"> 🧘 Mobilidade / alongamento</label>
+    <label class="check-item"><input type="checkbox"> 🎬 Filme ou episódio de série</label>
+    <label class="check-item"><input type="checkbox"> ☕ Café / passeio</label>
+    <label class="check-item"><input type="checkbox"> 📖 Leitura por prazer</label>
+    <label class="check-item"><input type="checkbox"> 🍳 Cozinhar algo diferente</label>
+    <label class="check-item"><input type="checkbox"> 🧩 Jogo ou hobby</label>
+    <label class="check-item"><input type="checkbox"> 👥 Tempo de qualidade com alguém</label>
+    <label class="check-item"><input type="checkbox"> ✨ Conhecer um lugar novo</label>
+    <label class="check-item"><input type="checkbox"> 🧪 Testar um hobby diferente</label>
+    <label class="check-item"><input type="checkbox"> 🗺️ Fazer uma rota diferente</label>
+  </div>
+
+  <h2 class="section-title">Monitoramento de YouTube / Netflix com poucos registros</h2>
+  <div class="info">
+    Registre apenas 1 vez por semana, ou em um dia marcante. Marque o uso como abaixo/dentro/acima do seu padrão,
+    e só informe humor/energia quando isso ajudar. Depois, procure repetições em vez de tentar estabelecer um limite universal.
+  </div>
+  <div class="pattern" id="pattern"></div>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="config.js"></script>
+<script>
+const DATA = {"1": [{"title": "Modelagem — revisão final", "kind": "study", "weight": 2, "deadline": "2026-10-02", "task_id": "modelagem-final", "note": "Último bloco antes da P1.", "tag": "Modelagem", "movable": true}, {"title": "1/5", "kind": "study", "weight": 1, "deadline": "2026-10-06", "task_id": "grafos-parcial-1", "note": "Primeiro bloco para o parcial.", "tag": "Grafos", "movable": true}], "2": [{"title": "P1 Modelagem", "kind": "assessment", "weight": 3, "deadline": "2026-10-02", "task_id": "p1-modelagem", "note": null, "tag": "Prova", "movable": false}, {"title": "2/5", "kind": "study", "weight": 2, "deadline": "2026-10-06", "task_id": "grafos-parcial-2", "note": "Bloco depois da prova.", "tag": "Grafos", "movable": true}, {"title": "Lazer pós-prova", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "lazer-02", "note": "Momento de descompressão após a P1.", "tag": "Lazer", "movable": false}], "3": [{"title": "3/5", "kind": "study", "weight": 2, "deadline": "2026-10-06", "task_id": "grafos-parcial-3", "note": null, "tag": "Grafos", "movable": true}], "4": [{"title": "4/5", "kind": "study", "weight": 2, "deadline": "2026-10-06", "task_id": "grafos-parcial-4", "note": null, "tag": "Grafos", "movable": true}, {"title": "Atividade física", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "exercicio-04", "note": "Movimento leve.", "tag": "Exercício", "movable": false}], "5": [{"title": "Pluris", "kind": "commitment", "weight": 1.5, "deadline": null, "task_id": "pluris-5", "note": "Compromisso Pluris. Bloqueia estudo e outras atividades neste dia.", "tag": "Compromisso", "movable": false}], "6": [{"title": "Pluris", "kind": "commitment", "weight": 1.5, "deadline": null, "task_id": "pluris-6", "note": "Compromisso Pluris. Bloqueia estudo e outras atividades neste dia.", "tag": "Compromisso", "movable": false}, {"title": "Grafos (parcial)", "kind": "assessment", "weight": 3, "deadline": "2026-10-06", "task_id": "parcial-grafos", "note": null, "tag": "Prova", "movable": false}], "7": [{"title": "Pluris", "kind": "commitment", "weight": 1.5, "deadline": null, "task_id": "pluris-7", "note": "Compromisso Pluris. Bloqueia estudo e outras atividades neste dia.", "tag": "Compromisso", "movable": false}, {"title": "2/5", "kind": "study", "weight": 2, "deadline": "2026-10-14", "task_id": "fisica-2", "note": "Único bloco de estudo permitido durante o Pluris.", "tag": "Física", "movable": true}], "8": [{"title": "Pluris", "kind": "commitment", "weight": 1.5, "deadline": null, "task_id": "pluris-8", "note": "Compromisso Pluris. Bloqueia estudo e outras atividades neste dia.", "tag": "Compromisso", "movable": false}], "9": [{"title": "3/5", "kind": "study", "weight": 2, "deadline": "2026-10-14", "task_id": "fisica-3", "note": null, "tag": "Física", "movable": true}, {"title": "1/5", "kind": "study", "weight": 2, "deadline": "2026-10-13", "task_id": "grafos-t2-1", "note": null, "tag": "Grafos", "movable": true}], "10": [{"title": "4/5", "kind": "study", "weight": 2, "deadline": "2026-10-14", "task_id": "fisica-4", "note": null, "tag": "Física", "movable": true}, {"title": "1/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-13", "task_id": "tnm-s2-1", "note": null, "tag": "TNM", "movable": true}], "11": [{"title": "5/5", "kind": "study", "weight": 2, "deadline": "2026-10-14", "task_id": "fisica-5", "note": null, "tag": "Física", "movable": true}, {"title": "2/5", "kind": "study", "weight": 2, "deadline": "2026-10-13", "task_id": "grafos-t2-2", "note": null, "tag": "Grafos", "movable": true}, {"title": "2/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-13", "task_id": "tnm-s2-2", "note": null, "tag": "TNM", "movable": true}], "12": [{"title": "Feriado", "kind": "holiday", "weight": 0, "deadline": null, "task_id": "feriado-12", "note": null, "tag": "Feriado", "movable": false}, {"title": "3/5", "kind": "study", "weight": 2, "deadline": "2026-10-13", "task_id": "grafos-t2-3", "note": null, "tag": "Grafos", "movable": true}, {"title": "3/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-13", "task_id": "tnm-s2-3", "note": null, "tag": "TNM", "movable": true}], "13": [{"title": "S2 TNM", "kind": "assessment", "weight": 3, "deadline": "2026-10-13", "task_id": "s2-tnm", "note": null, "tag": "Prova", "movable": false}, {"title": "T2 Grafos", "kind": "assessment", "weight": 3, "deadline": "2026-10-13", "task_id": "t2-grafos", "note": null, "tag": "Prova", "movable": false}, {"title": "Lazer pós-provas", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "lazer-13", "note": "Recuperação depois dos compromissos.", "tag": "Lazer", "movable": false}], "14": [{"title": "P2 Física", "kind": "assessment", "weight": 3, "deadline": "2026-10-14", "task_id": "p2-fisica", "note": null, "tag": "Prova", "movable": false}, {"title": "Lazer pós-prova", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "lazer-14", "note": "Recuperação depois da prova.", "tag": "Lazer", "movable": false}], "15": [{"title": "P1 Ergonomia", "kind": "assessment", "weight": 3, "deadline": "2026-10-15", "task_id": "p1-ergonomia", "note": null, "tag": "Prova", "movable": false}, {"title": "1/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-20", "task_id": "tnm-cp-1", "note": null, "tag": "TNM", "movable": true}], "17": [{"title": "2/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-20", "task_id": "tnm-cp-2", "note": null, "tag": "TNM", "movable": true}, {"title": "Atividade física", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "exercicio-17", "note": "Momento leve.", "tag": "Exercício", "movable": false}], "19": [{"title": "3/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-20", "task_id": "tnm-cp-3", "note": null, "tag": "TNM", "movable": true}, {"title": "1/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-22", "task_id": "ergonomia-1", "note": null, "tag": "Ergonomia", "movable": true}], "20": [{"title": "CP TNM", "kind": "assessment", "weight": 3, "deadline": "2026-10-20", "task_id": "cp-tnm", "note": null, "tag": "Entrega", "movable": false}, {"title": "2/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-22", "task_id": "ergonomia-2", "note": null, "tag": "Ergonomia", "movable": true}], "21": [{"title": "3/3", "kind": "study", "weight": 1.5, "deadline": "2026-10-22", "task_id": "ergonomia-3", "note": null, "tag": "Ergonomia", "movable": true}], "22": [{"title": "S1 Ergonomia", "kind": "assessment", "weight": 3, "deadline": "2026-10-22", "task_id": "s1-ergonomia", "note": null, "tag": "Prova", "movable": false}, {"title": "Lazer pós-compromisso", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "lazer-22", "note": "Recuperação depois da prova.", "tag": "Lazer", "movable": false}], "24": [{"title": "Atividade física", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "exercicio-24", "note": "Momento leve.", "tag": "Exercício", "movable": false}], "25": [{"title": "1/3", "kind": "study", "weight": 1.5, "deadline": null, "task_id": "poii-1", "note": "Trabalho POII.", "tag": "POII", "movable": true}], "26": [{"title": "2/3", "kind": "study", "weight": 1.5, "deadline": null, "task_id": "poii-2", "note": "Trabalho POII.", "tag": "POII", "movable": true}, {"title": "Novidade", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "novidade-26", "note": "Experiência pequena e diferente da rotina.", "tag": "Novidade", "movable": false}], "27": [{"title": "3/3", "kind": "study", "weight": 1.5, "deadline": null, "task_id": "poii-3", "note": "Trabalho POII.", "tag": "POII", "movable": true}], "28": [{"title": "Feriado", "kind": "holiday", "weight": 0, "deadline": null, "task_id": "feriado-28", "note": null, "tag": "Feriado", "movable": false}, {"title": "Lazer", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "lazer-28", "note": "Dia deliberadamente mais leve.", "tag": "Lazer", "movable": false}], "30": [{"title": "Atividade física", "kind": "wellbeing", "weight": 0, "deadline": null, "task_id": "exercicio-30", "note": "Retomar movimento sem cobrança.", "tag": "Exercício", "movable": false}]};
+const LOCAL_STORAGE = "cronograma-outubro-2026-local-v1";
+const LOCAL_DATA_STORAGE = "cronograma-outubro-2026-local-data-v1";
+const CALENDAR_MONTH = "2026-10";
+const today = "2026-10-02";
+const weekdayNames = ["Domingo","Segunda-feira","Terça-feira","Quarta-feira","Quinta-feira","Sexta-feira","Sábado"];
+const HARD_SUBJECTS = ["Física","Grafos","Modelagem","Tráfego"];
+let state = loadLocalState();
+let supabaseClient = null;
+let currentUser = null;
+let realtimeChannel = null;
+let cloudSaveTimer = null;
+let applyingRemote = false;
+let lastCloudWrite = null;
+let cloudReady = false;
+let draggedKey = null;
+let draggedGroupKeys = null;
+let draggedMode = null;
+let selectedDay = 2;
+
+function loadLocalState() {
+  try {
+    const raw=localStorage.getItem(LOCAL_STORAGE);
+    if(!raw) return {};
+    return JSON.parse(raw)||{};
+  } catch(e) { return {}; }
+}
+function saveState() {
+  localStorage.setItem(LOCAL_STORAGE, JSON.stringify(state));
+  localStorage.setItem(LOCAL_DATA_STORAGE, JSON.stringify(DATA));
+  updateCloudStatus("Salvando...", "warn");
+
+  if(currentUser && !applyingRemote) {
+    clearTimeout(cloudSaveTimer);
+    cloudSaveTimer=setTimeout(()=>saveToCloud(),250);
+  }
+}
+function updateCloudStatus(text, mode) {
+  const el=document.getElementById("cloudStatus");
+  if(!el) return;
+  el.textContent=text;
+  el.className="badge "+(mode==="ok"?"cloud-ok":"cloud-warn");
+}
+async function saveToCloud() {
+  if(!supabaseClient || !currentUser) return;
+  try {
+    const updatedAt=new Date().toISOString();
+    lastCloudWrite=updatedAt;
+    const {error}=await supabaseClient
+      .from("calendar_documents")
+      .upsert({
+        user_id:currentUser.id,
+        calendar_month:CALENDAR_MONTH,
+        data:DATA,
+        state:state,
+        updated_at:updatedAt
+      }, {onConflict:"user_id,calendar_month"});
+    if(error) throw error;
+    updateCloudStatus("☁️ Sincronizado","ok");
+  } catch(error) {
+    console.error(error);
+    updateCloudStatus("⚠️ Erro ao sincronizar","warn");
+  }
+}
+async function loadCloudCalendar(user) {
+  const {data,rowError}=await supabaseClient
+    .from("calendar_documents")
+    .select("data,state,updated_at")
+    .eq("user_id",user.id)
+    .eq("calendar_month",CALENDAR_MONTH)
+    .maybeSingle();
+
+  if(rowError) throw rowError;
+
+  if(data) {
+    applyingRemote=true;
+    Object.keys(DATA).forEach(k=>delete DATA[k]);
+    Object.assign(DATA, data.data||{});
+    state=data.state||{};
+    applyingRemote=false;
+  } else {
+    // First login: create the cloud document from the current calendar.
+    await saveToCloud();
+  }
+  localStorage.setItem(LOCAL_STORAGE,JSON.stringify(state));
+  localStorage.setItem(LOCAL_DATA_STORAGE,JSON.stringify(DATA));
+  renderAll();
+  renderPattern();
+  selectDay(selectedDay);
+}
+function dayEvents(day) { return DATA[String(day)] || []; }
+function loadFor(day) { return dayEvents(day).reduce((s,e)=>s+(Number(e.weight)||0),0); }
+function heatColor(load) {
+  if(load < 3) return "#57d978";
+  if(load < 4) return "#f0f33b";
+  if(load < 6) return "#ff9f1c";
+  return "#ff3b30";
+}
+function formatDate(day) {
+  const d = new Date(2026,9,day);
+  return `${weekdayNames[d.getDay()]} · ${String(day).padStart(2,"0")}/10/2026`;
+}
+function escapeHtml(s) {
+  return String(s ?? "").replace(/[&<>"']/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));
+}
+function eventKey(e, day, idx) { return e.task_id || `d${day}-${idx}`; }
+
+function subjectClass(e) {
+  if(["Física","Grafos","Modelagem","Tráfego","TNM","Ergonomia","POII","TCC"].includes(e.tag)) return "subject-"+e.tag;
+  if(e.kind==="commitment") return "subject-Compromisso special-pill-commitment";
+  if(e.kind==="assessment") return (e.tag==="Entrega" ? "subject-Entrega" : "subject-Prova") + " special-pill-assessment";
+  if(e.kind==="holiday") return "subject-Feriado special-pill-holiday";
+  if(e.kind==="wellbeing" && e.tag==="Lazer") return "subject-Lazer";
+  if(e.kind==="wellbeing" && e.tag==="Exercício") return "subject-Exercício";
+  if(e.kind==="wellbeing" && e.tag==="Novidade") return "subject-Novidade";
+  return "subject-default";
+}
+
+function specialClass(day) {
+  const ev=dayEvents(day);
+  if(ev.some(e=>e.kind==="commitment")) return "special commitment-day";
+  if(ev.some(e=>e.kind==="assessment")) return "special assessment-day";
+  if(ev.some(e=>e.kind==="holiday")) return "special holiday-day";
+  return "";
+}
+
+function getWellbeingSummary(day, events) {
+  const order=["Exercício","Novidade","Lazer"];
+  const emoji={"Exercício":"🏃","Novidade":"✨","Lazer":"🎬"};
+  const out=[];
+  order.forEach(tag=>{
+    const matches=events.map((e,idx)=>({...e,__idx:idx})).filter(e=>e.kind==="wellbeing"&&e.tag===tag);
+    matches.forEach(e=>{
+      const key=eventKey(e,day,e.__idx);
+      const st=state[key]||"planned";
+      const strike=st==="rescheduled"||st==="missed" ? "style='opacity:.4;text-decoration:line-through'" : "";
+      const check=st==="done" ? "✅" : "";
+      // The emoji itself is the drag handle for a wellbeing activity.
+      out.push(`<span class="wellbeing-drag" ${e.movable!==false?`draggable="true" ondragstart="startDrag('${escapeHtml(key)}')"`:""} ${strike} title="${escapeHtml(e.tag)} ${check}">
+        <span class="emoji">${emoji[tag]}</span>${check?`<span class="emoji-check">✓</span>`:""}
+      </span>`);
+    });
+  });
+  return out.join("");
+}
+function getSpecialHeader(events) {
+  const titles=[];
+  events.forEach(e=>{
+    if(e.kind==="holiday") {
+      if(!titles.includes("Feriado")) titles.push("Feriado");
+    } else if(e.kind==="commitment" || e.kind==="assessment") {
+      if(!titles.includes(e.title)) titles.push(e.title);
+    }
+  });
+  return titles.join(" · ");
+}
+function normalizeGroupKey(e) {
+  if(e.kind==="study") return `study:${e.tag||"Estudo"}`;
+  if(e.kind==="wellbeing") return `wellbeing:${e.tag||"Bem-estar"}`;
+  return `${e.kind}:${e.tag||e.title}`;
+}
+function parseStudyRange(events) {
+  const parts=[];
+  events.forEach(e=>{
+    const m=String(e.title||"").match(/^\s*(\d+)\s*\/\s*(\d+)\s*$/);
+    if(m) parts.push({n:Number(m[1]),total:Number(m[2])});
+  });
+  if(!parts.length) return null;
+  parts.sort((a,b)=>a.n-b.n);
+  return {min:parts[0].n,max:parts[parts.length-1].n,total:parts[0].total,count:parts.length};
+}
+function aggregateCalendarEvents(day,events) {
+  const groups=new Map();
+  events.forEach((e,idx)=>{
+    const key=normalizeGroupKey(e);
+    if(!groups.has(key)) groups.set(key,[]);
+    groups.get(key).push({...e,__sourceIndex:idx,__day:day});
+  });
+  const result=[];
+  groups.forEach(group=>{
+    const first=group[0], ids=group.map(e=>eventKey(e,day,e.__sourceIndex));
+    const range=first.kind==="study" ? parseStudyRange(group) : null;
+    let title=first.title;
+    if(first.kind==="study" && range) {
+      title=`${first.tag||"Estudo"} ${range.min===range.max?`${range.min}/${range.total}`:`${range.min}-${range.max}/${range.total}`}`;
+    } else if(first.kind==="wellbeing") {
+      title=first.tag==="Exercício"?"Atividade física":(first.tag||first.title);
+    }
+    result.push({
+      kind:first.kind,tag:first.tag,title,events:group,ids,count:group.length,
+      attentionCount:first.kind==="study" && range ? Math.max(0,range.count-1) : 0
+    });
+  });
+  const priority={study:3,wellbeing:4,commitment:9,assessment:9,holiday:9};
+  result.sort((a,b)=>(priority[a.kind]??9)-(priority[b.kind]??9));
+  return result;
+}
+function getWellbeingSummary(day, events) {
+  const order=["Exercício","Novidade","Lazer"];
+  const emoji={"Exercício":"🏃","Novidade":"✨","Lazer":"🎬"};
+  const out=[];
+  order.forEach(tag=>{
+    events.forEach((e,idx)=>{
+      if(e.kind==="wellbeing" && e.tag===tag){
+        const key=eventKey(e,day,idx);
+        const st=state[key]||"planned";
+        const strike=st==="rescheduled"||st==="missed" ? "style='opacity:.4;text-decoration:line-through'" : "";
+        const check=st==="done" ? "✅" : "";
+        out.push(`<span class="wellbeing-drag" ${strike} title="${escapeHtml(e.tag)} ${check}"><span class="emoji">${emoji[tag]}</span>${check?`<span class="emoji-check">✅</span>`:""}</span>`);
+      }
+    });
+  });
+  return out.join("");
+}
+
+function getSpecialHeader(events) {
+  const titles=[];
+  events.forEach(e=>{
+    if(e.kind==="holiday") {
+      if(!titles.includes("Feriado")) titles.push("Feriado");
+    } else if(e.kind==="commitment" || e.kind==="assessment") {
+      if(!titles.includes(e.title)) titles.push(e.title);
+    }
+  });
+  return titles.join(" · ");
+}
+
+function normalizeGroupKey(e) {
+  if(e.kind==="study") return `study:${e.tag||"Estudo"}`;
+  if(e.kind==="wellbeing") return `wellbeing:${e.tag||"Bem-estar"}`;
+  return `${e.kind}:${e.tag||e.title}`;
+}
+
+function parseStudyRange(events) {
+  const parts=[];
+  events.forEach(e=>{
+    const m=String(e.title||"").match(/^\s*(\d+)\s*\/\s*(\d+)\s*$/);
+    if(m) parts.push({n:Number(m[1]),total:Number(m[2])});
+  });
+  if(!parts.length) return null;
+  parts.sort((a,b)=>a.n-b.n);
+  return {min:parts[0].n,max:parts[parts.length-1].n,total:parts[0].total,count:parts.length};
+}
+
+function aggregateCalendarEvents(day,events) {
+  const groups=new Map();
+  events.forEach((e,idx)=>{
+    const key=normalizeGroupKey(e);
+    if(!groups.has(key)) groups.set(key,[]);
+    groups.get(key).push({...e,__sourceIndex:idx,__day:day});
+  });
+  const result=[];
+  groups.forEach(group=>{
+    const first=group[0], ids=group.map(e=>eventKey(e,day,e.__sourceIndex));
+    const range=first.kind==="study" ? parseStudyRange(group) : null;
+    let title=first.title;
+    if(first.kind==="study" && range) {
+      title=`${first.tag||"Estudo"} ${range.min===range.max?`${range.min}/${range.total}`:`${range.min}-${range.max}/${range.total}`}`;
+    } else if(first.kind==="wellbeing") {
+      title=first.tag==="Exercício"?"Atividade física":(first.tag||first.title);
+    }
+    result.push({
+      kind:first.kind,tag:first.tag,title,events:group,ids,count:group.length,
+      attentionCount:first.kind==="study" && range ? Math.max(0,range.count-1) : 0
+    });
+  });
+  const priority={study:3,wellbeing:4,commitment:9,assessment:9,holiday:9};
+  result.sort((a,b)=>(priority[a.kind]??9)-(priority[b.kind]??9));
+  return result;
+}
+
+function renderCalendar() {
+  const cal=document.getElementById("calendar");
+  cal.innerHTML="";
+  const first=(new Date(2026,9,1).getDay()+6)%7;
+
+  for(let i=0;i<first;i++){
+    const blank=document.createElement("div");
+    blank.className="day empty";
+    cal.appendChild(blank);
+  }
+
+  for(let day=1;day<=31;day++){
+    const events=dayEvents(day);
+    const groups=aggregateCalendarEvents(day,events);
+    const card=document.createElement("div");
+    card.className=`day ${specialClass(day)} ${day===2?"today":""}`;
+    card.dataset.day=day;
+
+    card.onclick=(ev)=>{
+      if(ev.target.closest(".event")) return;
+      selectDay(day);
+    };
+
+    const specialTitle=getSpecialHeader(events);
+    const topWellbeing=getWellbeingSummary(day,events);
+    const topHtml=`<div class="num"><span>${day}</span>${specialTitle?`<span class="day-special-title">${escapeHtml(specialTitle)}</span>`:""}</div>
+      ${topWellbeing?`<div class="wellbeing-top">${topWellbeing}</div>`:""}`;
+
+    const evHtml=groups.filter(group=>group.kind==="study" || group.kind==="wellbeing").map(group=>{
+      const firstEvent=group.events[0];
+      const canDrag=group.events.every(e=>e.movable!==false);
+      const allDone=group.ids.every(id=>state[id]==="done");
+      const anyRescheduled=group.ids.some(id=>state[id]==="rescheduled");
+      const anyMissed=group.ids.some(id=>state[id]==="missed");
+      const statusClass=allDone?"status-done":((anyRescheduled||anyMissed)?"status-rescheduled":"");
+
+      // For wellbeing always move exactly one event; for grouped study move one session.
+      const dragKey = firstEvent.kind==="wellbeing"
+        ? eventKey(firstEvent,day,firstEvent.__sourceIndex)
+        : group.ids.join("|");
+
+      const attention=group.attentionCount
+        ? Array.from({length:group.attentionCount},()=>`<span class="aggregate-attention">❗</span>`).join("")
+        : "";
+      const check=allDone?`<span class="status-check" aria-label="realizado">✅</span>`:"";
+
+      const pill=document.createElement ? null : null;
+      return `<div class="event ${subjectClass(firstEvent)} ${firstEvent.kind} ${statusClass} ${canDrag?'user-draggable':''}"
+        data-drag-key="${escapeHtml(dragKey)}"
+        data-drag-kind="${escapeHtml(firstEvent.kind)}"
+        data-day="${day}"
+        title="${escapeHtml(firstEvent.note||group.title)}">
+        <b>${escapeHtml(group.title)}</b>${attention}${check}
+      </div>`;
+    }).join("");
+
+    card.innerHTML=topHtml+`<div class="events">${evHtml||'<div class="event" style="opacity:.5;cursor:default;border-radius:999px;background:#edf1ee">Buffer / recuperação</div>'}</div>`;
+    cal.appendChild(card);
+  }
+
+  bindPointerDragging();
+  renderMiniHeat();
+}
+function findEventByKey(key) {
+  for(let d=1;d<=31;d++) {
+    const arr=dayEvents(d);
+    for(let i=0;i<arr.length;i++) {
+      if(eventKey(arr[i],d,i)===key) return {day:d,index:i,event:arr[i]};
+    }
+  }
+  return null;
+}
+
+function canPlace(day,e) {
+  if(day<1 || day>31) return false;
+  // Pluris fully blocks 05–08 except Physics on 07.
+  if(day>=5 && day<=8) {
+    if(day===7 && e.kind==="study" && e.tag==="Física") return true;
+    return false;
+  }
+  // Avoid pairing hard subjects on the same day.
+  if(e.kind==="study" && HARD_SUBJECTS.includes(e.tag)) {
+    if(dayEvents(day).some(x=>x.kind==="study" && HARD_SUBJECTS.includes(x.tag) && x.tag!==e.tag)) return false;
+  }
+  return true;
+}
+
+function findRescheduleTarget(fromDay,e) {
+  let latest=31;
+  if(e.deadline) latest=Math.min(latest,Number(e.deadline.slice(8,10))-1);
+  const candidates=[];
+  for(let d=fromDay+1;d<=latest;d++) {
+    if(!canPlace(d,e)) continue;
+    const wd=new Date(2026,9,d).getDay();
+    const capacity=[3,3,1,2,1,3,2][wd]; // Sun..Sat; Tue/Thu intentionally lower.
+    const load=loadFor(d);
+    const hasWellbeing=dayEvents(d).some(x=>x.kind==="wellbeing");
+    const alreadySame=dayEvents(d).some(x=>x.kind==="study" && x.tag===e.tag);
+    let score=load*2 - capacity;
+    if(e.kind==="wellbeing" && hasWellbeing) score+=8;
+    if(e.kind==="study" && alreadySame) score+=1;
+    candidates.push({day:d,score});
+  }
+  candidates.sort((a,b)=>a.score-b.score || a.day-b.day);
+  return candidates.length ? candidates[0].day : null;
+}
+
+function removeReplacementCopies(originalKey) {
+  for(let d=1;d<=31;d++){
+    const arr=dayEvents(d);
+    for(let i=arr.length-1;i>=0;i--){
+      const taskId=arr[i].task_id?String(arr[i].task_id):"";
+      if(taskId.startsWith(originalKey+"-r")){
+        delete state[taskId];
+        arr.splice(i,1);
+      }
+    }
+  }
+}
+function findReplacementKey(originalKey){
+  for(let d=1;d<=31;d++){
+    for(const e of dayEvents(d)){
+      const tid=e.task_id?String(e.task_id):"";
+      if(tid.startsWith(originalKey+"-r")) return tid;
+    }
+  }
+  return null;
+}
+
+function removeReplacementCopies(originalKey){
+  for(let d=1;d<=31;d++){
+    const arr=dayEvents(d);
+    for(let i=arr.length-1;i>=0;i--){
+      const tid=arr[i].task_id?String(arr[i].task_id):"";
+      if(tid.startsWith(originalKey+"-r")){
+        delete state[tid];
+        arr.splice(i,1);
+      }
+    }
+  }
+}
+
+function setStatus(key,status){
+  const found=findEventByKey(key);
+  if(!found) return;
+
+  const current=state[key]||"planned";
+
+  // Clicking the currently selected status toggles it OFF and reverses its effects.
+  if((status==="done" && current==="done") || (status==="missed" && current==="rescheduled")){
+    if(status==="missed") removeReplacementCopies(key);
+    state[key]="planned";
+    saveState();
+    renderAll();
+    selectDay(selectedDay);
+    return;
+  }
+
+  if(status==="done"){
+    // If it had been marked missed/rescheduled, remove the replacement and restore the original.
+    removeReplacementCopies(key);
+    state[key]="done";
+  }else if(status==="missed"){
+    // If marked missed for the first time, make exactly one automatic replacement.
+    removeReplacementCopies(key);
+    if(found.event.movable!==false){
+      const target=findRescheduleTarget(found.day,found.event);
+      if(target!==null){
+        const clone={
+          ...found.event,
+          task_id:key+"-r"+target,
+          note:"Realocado automaticamente após não realização."
+        };
+        DATA[String(target)]=DATA[String(target)]||[];
+        DATA[String(target)].push(clone);
+        state[key]="rescheduled";
+        state[clone.task_id]="planned";
+      }else{
+        state[key]="missed";
+      }
+    }else{
+      state[key]="missed";
+    }
+  }else{
+    state[key]=status;
+  }
+
+  saveState();
+  renderAll();
+  selectDay(selectedDay);
+}
+
+function startDrag(key){
+  // Kept for compatibility with older saved HTML state; pointer dragging is the active system.
+  draggedKey=key;
+}
+function startDragGroup(keysString,kind){
+  // Kept for compatibility; normal interaction uses pointer dragging.
+  draggedGroupKeys=keysString.split("|").filter(Boolean);
+  draggedMode=kind==="wellbeing"?"single":"study-group";
+}
+
+function dropTask(targetDay){
+  // Compatibility with older handlers.
+  const keys=draggedGroupKeys&&draggedGroupKeys.length?draggedGroupKeys:(draggedKey?[draggedKey]:[]);
+  if(!keys.length) return;
+  moveDraggedItemToDay(keys.join("|"),draggedMode==="single"?"wellbeing":"study-group",targetDay);
+  draggedKey=null;
+  draggedGroupKeys=null;
+  draggedMode=null;
+}
+
+
+/* Robust pointer-based drag system for every movable calendar pill. */
+let pointerDragState = null;
+
+function bindPointerDragging(){
+  document.querySelectorAll(".calendar .event.user-draggable").forEach(pill=>{
+    pill.onpointerdown=(ev)=>{
+      if(ev.button!==0) return;
+      const keyString=pill.dataset.dragKey||"";
+      const kind=pill.dataset.dragKind||"";
+      if(!keyString) return;
+
+      pointerDragState={
+        keyString,
+        kind,
+        startX:ev.clientX,
+        startY:ev.clientY,
+        active:false,
+        sourcePill:pill,
+        ghost:null,
+        targetDay:null
+      };
+
+      try{ pill.setPointerCapture(ev.pointerId); }catch(_){}
+      document.addEventListener("pointermove",handlePointerMove,{passive:false});
+      document.addEventListener("pointerup",handlePointerUp,{once:true});
+      document.addEventListener("pointercancel",handlePointerUp,{once:true});
+    };
+  });
+}
+
+function findDayElementAtPoint(x,y){
+  const el=document.elementFromPoint(x,y);
+  return el && el.closest ? el.closest(".day[data-day]") : null;
+}
+
+function beginPointerDrag(ev){
+  if(!pointerDragState || pointerDragState.active) return;
+  const dx=Math.abs(ev.clientX-pointerDragState.startX);
+  const dy=Math.abs(ev.clientY-pointerDragState.startY);
+  if(Math.max(dx,dy)<5) return;
+
+  pointerDragState.active=true;
+  const src=pointerDragState.sourcePill;
+  src.classList.add("dragging-pointer");
+
+  const ghost=document.createElement("div");
+  ghost.className="drag-ghost";
+  ghost.textContent=src.innerText.trim();
+  ghost.style.background=getComputedStyle(src).backgroundColor;
+  ghost.style.color=getComputedStyle(src).color;
+  document.body.appendChild(ghost);
+  pointerDragState.ghost=ghost;
+  src.style.visibility="hidden";
+}
+
+function handlePointerMove(ev){
+  if(!pointerDragState) return;
+  if(!pointerDragState.active) beginPointerDrag(ev);
+  if(!pointerDragState.active) return;
+  ev.preventDefault();
+
+  const ghost=pointerDragState.ghost;
+  if(ghost){
+    ghost.style.left=(ev.clientX+12)+"px";
+    ghost.style.top=(ev.clientY+12)+"px";
+  }
+
+  document.querySelectorAll(".day.drag-target").forEach(x=>x.classList.remove("drag-target"));
+  const target=findDayElementAtPoint(ev.clientX,ev.clientY);
+  if(target){
+    target.classList.add("drag-target");
+    pointerDragState.targetDay=Number(target.dataset.day);
+  }else{
+    pointerDragState.targetDay=null;
+  }
+}
+
+function handlePointerUp(ev){
+  document.removeEventListener("pointermove",handlePointerMove);
+  if(!pointerDragState) return;
+
+  const drag=pointerDragState;
+  document.querySelectorAll(".day.drag-target").forEach(x=>x.classList.remove("drag-target"));
+
+  if(drag.active && drag.targetDay){
+    moveDraggedItemToDay(drag.keyString,drag.kind,drag.targetDay);
+  }
+
+  if(drag.sourcePill){
+    drag.sourcePill.style.visibility="";
+    drag.sourcePill.classList.remove("dragging-pointer");
+  }
+  if(drag.ghost) drag.ghost.remove();
+  pointerDragState=null;
+}
+
+function moveDraggedItemToDay(keyString,kind,targetDay){
+  const keys=String(keyString).split("|").filter(Boolean);
+  let found=null;
+
+  if(kind==="wellbeing"){
+    found=findEventByKey(keys[0]);
+  }else{
+    found=chooseOneSessionFromGroup(keys);
+  }
+
+  if(!found || found.event.movable===false) return;
+
+  DATA[String(found.day)].splice(found.index,1);
+  DATA[String(targetDay)]=DATA[String(targetDay)]||[];
+  DATA[String(targetDay)].push(found.event);
+
+  const movedKey=eventKey(found.event,found.day,found.index);
+  state[movedKey]="planned";
+
+  saveState();
+  renderAll();
+  selectDay(targetDay);
+}
+function chooseOneSessionFromGroup(keys){
+  for(const key of keys){
+    const found=findEventByKey(key);
+    if(found && found.event.movable!==false && state[key]!=="done" && state[key]!=="rescheduled") return found;
+  }
+  for(const key of keys){
+    const found=findEventByKey(key);
+    if(found && found.event.movable!==false) return found;
+  }
+  return null;
+}
+
+function selectDay(day) {
+  selectedDay=day;
+  document.getElementById("selectedTitle").textContent=`${day} de outubro`;
+  document.getElementById("selectedDate").textContent=formatDate(day)+(day===2?" · hoje":"");
+  const load=loadFor(day);
+  document.getElementById("selectedLoad").innerHTML=`<span class="badge">Carga acadêmica: ${load.toFixed(load%1?1:0)}</span>`;
+
+  const ul=document.getElementById("details");
+  ul.innerHTML="";
+  const events=dayEvents(day);
+
+  if(!events.length) {
+    ul.innerHTML=`<li><b>Dia mais livre.</b><small>Use como buffer, descanso ou para receber uma tarefa remanejada.</small></li>`;
+    return;
+  }
+
+  events.forEach((e,idx)=>{
+    const key=eventKey(e,day,idx);
+    const st=state[key]||"planejado";
+    const li=document.createElement("li");
+    const statusHtml=`<small>Status: ${st}${e.deadline?` · prazo: ${e.deadline.slice(8,10)}/10`:""}</small>`;
+    const controls=(e.kind==="study" || e.kind==="wellbeing" || e.kind==="commitment")
+      ? `<div style="margin-top:7px;display:flex;gap:6px;flex-wrap:wrap">
+          <button onclick="setStatus('${escapeHtml(key)}','done')">✓ Realizado</button>
+          <button onclick="setStatus('${escapeHtml(key)}','missed')">Não realizado</button>
+          <button onclick="excluirItem('${escapeHtml(key)}')" style="background:#fff0f0;border-color:#efc2c2">Excluir</button>
+         </div>` : `<div style="margin-top:7px"><button onclick="excluirItem('${escapeHtml(key)}')" style="background:#fff0f0;border-color:#efc2c2">Excluir</button></div>`;
+    li.innerHTML=`<b>${escapeHtml(e.title)}</b>${e.tag?` <span class="badge">${escapeHtml(e.tag)}</span>`:""}${e.note?`<small>${escapeHtml(e.note)}</small>`:""}${statusHtml}${controls}${e.movable!==false?`<div class="drag-help">↔ Arraste esta atividade para qualquer data.</div>`:""}`;
+    ul.appendChild(li);
+  });
+}
+function renderMiniHeat() {
+  const box=document.getElementById("miniHeat");
+  box.innerHTML="";
+  const first=(new Date(2026,9,1).getDay()+6)%7;
+  for(let i=0;i<first;i++){
+    const blank=document.createElement("span");
+    blank.className="mh-blank";
+    box.appendChild(blank);
+  }
+  for(let d=1;d<=31;d++){
+    const i=document.createElement("i");
+    i.style.background=heatColor(loadFor(d));
+    i.textContent=d;
+    i.title=`${d}/10`;
+    box.appendChild(i);
+  }
+}
+function updateMetrics() {
+  const all=Array.from({length:31},(_,i)=>dayEvents(i+1));
+  const studies=all.flat().filter(e=>e.kind==="study");
+  const assessments=all.flat().filter(e=>e.kind==="assessment");
+  const commitments=all.flat().filter(e=>e.kind==="commitment");
+  const wellbeing=all.flat().filter(e=>e.kind==="wellbeing");
+  document.getElementById("metrics").innerHTML=`
+    <div class="metric"><b>${assessments.length}</b><span>provas / entregas</span></div>
+    <div class="metric"><b>${studies.length}</b><span>blocos de estudo</span></div>
+    <div class="metric"><b>${commitments.length}</b><span>dias de compromisso</span></div>
+    <div class="metric"><b>${wellbeing.length}</b><span>momentos de bem-estar</span></div>
+    <div class="metric"><b>1×/sem</b><span>atividade física como meta atual</span></div>`;
+}
+
+function recalcular() {
+  const pending=[];
+  for(let d=1;d<=31;d++) {
+    dayEvents(d).forEach((e,idx)=>{
+      const key=eventKey(e,d,idx);
+      if((e.kind==="study"||e.kind==="wellbeing") && state[key]==="missed" && e.movable!==false) {
+        pending.push({from:d,e,key});
+      }
+    });
+  }
+
+  let moved=0;
+  pending.sort((a,b)=>(a.e.deadline||"9999-12-31").localeCompare(b.e.deadline||"9999-12-31"));
+  pending.forEach(item=>{
+    const target=findRescheduleTarget(item.from,item.e);
+    if(target!==null) {
+      const clone={...item.e,task_id:item.key+"-r"+target,note:"Realocado após recalculo."};
+      DATA[String(target)]=DATA[String(target)]||[];
+      DATA[String(target)].push(clone);
+      state[item.key]="rescheduled";
+      state[clone.task_id]="planned";
+      moved++;
+    }
+  });
+
+  saveState();
+  renderAll();
+  selectDay(selectedDay);
+  alert(moved ? `${moved} item(ns) foram realocados.` : "Nenhum item pendente encontrou uma data válida.");
+}
+
+function exportarProgresso() {
+  const payload={version:1,exportedAt:new Date().toISOString(),data:DATA,state:state};
+  const blob=new Blob([JSON.stringify(payload,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="cronograma-outubro-2026-backup.json";
+  a.click();
+  URL.revokeObjectURL(a.href);
+}
+function limparProgresso() {
+  if(confirm("Apagar o progresso salvo neste navegador?")) {
+    state={};
+    localStorage.removeItem(STORAGE);
+    renderAll();
+    selectDay(2);
+    renderPattern();
+  }
+}
+
+
+function mostrarAdicionar(){ document.getElementById("addPanel").style.display="block"; }
+function ocultarAdicionar(){ document.getElementById("addPanel").style.display="none"; }
+
+function criarItem(){
+  const day=Math.max(1,Math.min(31,Number(document.getElementById("newDay").value||1)));
+  const type=document.getElementById("newType").value;
+  const tag=document.getElementById("newTag").value;
+  const rawTitle=document.getElementById("newTitle").value.trim();
+  if(!rawTitle){ alert("Digite um nome ou descrição."); return; }
+
+  let finalTag=tag, finalTitle=rawTitle;
+  if(type==="wellbeing"){
+    if(tag==="Exercício") finalTitle="Atividade física";
+    if(tag==="Lazer") finalTitle="Lazer";
+    if(tag==="Novidade") finalTitle="Novidade";
+  }
+  const id="custom-"+Date.now();
+  const event={
+    title:finalTitle, kind:type, weight:type==="commitment"?1.5:(type==="assessment"?3:(type==="study"?1.5:0)),
+    deadline:null, task_id:id, note:"Criado pelo usuário.", tag:finalTag, movable:true
+  };
+  DATA[String(day)]=DATA[String(day)]||[];
+  DATA[String(day)].push(event);
+  state[id]="planned";
+  saveState();
+  ocultarAdicionar();
+  renderAll();
+  selectDay(day);
+}
+
+function excluirItem(key){
+  const found=findEventByKey(key);
+  if(!found) return;
+  if(!confirm(`Excluir "${found.event.title}" do cronograma?`)) return;
+  DATA[String(found.day)].splice(found.index,1);
+  delete state[key];
+  // Also remove automatic replacements derived from this activity.
+  for(let d=1;d<=31;d++){
+    const arr=dayEvents(d);
+    for(let i=arr.length-1;i>=0;i--){
+      const rid=arr[i].task_id?String(arr[i].task_id):"";
+      if(rid.startsWith(key+"-r")){
+        delete state[rid];
+        arr.splice(i,1);
+      }
+    }
+  }
+  saveState();
+  renderAll();
+  selectDay(selectedDay);
+}
+
+function renderPattern() {
+  const wrap=document.getElementById("pattern"); wrap.innerHTML="";
+  const periods=["1–4","5–11","12–18","19–25","26–31"];
+  periods.forEach((p,i)=>{
+    const key="pattern-"+i;
+    const s=state[key]||{screen:"normal",mood:"",energy:"",note:""};
+    const box=document.createElement("div"); box.className="pbox";
+    box.innerHTML=`<h4>Período ${i+1} · ${p}/10</h4>
+      <label>Tempo de tela aproximado</label>
+      <input id="${key}-screen" type="text" value="${s.screen||""}" placeholder="Ex.: 2h30, 45 min">
+      <label>Humor (1–5, opcional)</label>
+      <input id="${key}-mood" type="number" min="1" max="5" value="${s.mood}">
+      <label>Energia (1–5, opcional)</label>
+      <input id="${key}-energy" type="number" min="1" max="5" value="${s.energy}">
+      <label>Observação curta</label>
+      <textarea id="${key}-note" placeholder="Ex.: uso alto depois de estudar; no dia seguinte...">${s.note||""}</textarea>
+      <button style="margin-top:8px;width:100%" onclick="savePattern('${key}')">Salvar</button>`;
+    wrap.appendChild(box);
+  });
+}
+
+function savePattern(key) {
+  state[key]={
+    screen:document.getElementById(key+"-screen").value,
+    mood:document.getElementById(key+"-mood").value,
+    energy:document.getElementById(key+"-energy").value,
+    note:document.getElementById(key+"-note").value
+  };
+  saveState();
+}
+
+
+function setAuthMessage(message, visible=true){
+  const el=document.getElementById("authMsg");
+  if(!el) return;
+  el.textContent=message;
+  el.style.display=visible?"block":"none";
+}
+function showAuth(show){
+  const overlay=document.getElementById("authOverlay");
+  if(overlay) overlay.style.display=show?"flex":"none";
+}
+async function entrar(){
+  if(!supabaseClient){setAuthMessage("Configure o Supabase no arquivo config.js.");return;}
+  const email=document.getElementById("authEmail").value.trim();
+  const password=document.getElementById("authPassword").value;
+  if(!email||!password){setAuthMessage("Informe e-mail e senha.");return;}
+  setAuthMessage("Entrando...",true);
+  const {error}=await supabaseClient.auth.signInWithPassword({email,password});
+  if(error) setAuthMessage(error.message,true);
+}
+async function criarConta(){
+  if(!supabaseClient){setAuthMessage("Configure o Supabase no arquivo config.js.");return;}
+  const email=document.getElementById("authEmail").value.trim();
+  const password=document.getElementById("authPassword").value;
+  if(!email||!password){setAuthMessage("Informe e-mail e senha.");return;}
+  if(password.length<6){setAuthMessage("Use uma senha com pelo menos 6 caracteres.");return;}
+
+  setAuthMessage("Criando conta...",true);
+  const {data,error}=await supabaseClient.auth.signUp({email,password});
+  if(error){setAuthMessage(error.message,true);return;}
+
+  if(data.session){
+    setAuthMessage("Conta criada. Entrando...",true);
+  }else{
+    setAuthMessage("Conta criada. Verifique seu e-mail para confirmar a conta e depois entre.",true);
+  }
+}
+async function sair(){
+  if(supabaseClient) await supabaseClient.auth.signOut();
+}
+async function connectRealtime(user){
+  if(realtimeChannel){
+    await supabaseClient.removeChannel(realtimeChannel);
+    realtimeChannel=null;
+  }
+
+  realtimeChannel=supabaseClient
+    .channel("calendar-sync-"+user.id)
+    .on("postgres_changes",{
+      event:"*",
+      schema:"public",
+      table:"calendar_documents",
+      filter:`user_id=eq.${user.id}`
+    },payload=>{
+      const row=payload.new||{};
+      if(row.calendar_month!==CALENDAR_MONTH) return;
+
+      // Ignore an echo of the write we just made.
+      if(lastCloudWrite && row.updated_at===lastCloudWrite) return;
+
+      applyingRemote=true;
+      Object.keys(DATA).forEach(k=>delete DATA[k]);
+      Object.assign(DATA,row.data||{});
+      state=row.state||{};
+      applyingRemote=false;
+
+      localStorage.setItem(LOCAL_STORAGE,JSON.stringify(state));
+      localStorage.setItem(LOCAL_DATA_STORAGE,JSON.stringify(DATA));
+      renderAll();
+      renderPattern();
+      selectDay(selectedDay);
+      updateCloudStatus("☁️ Atualizado em outro dispositivo","ok");
+    })
+    .subscribe(status=>{
+      if(status==="SUBSCRIBED") updateCloudStatus("☁️ Sincronizado","ok");
+      else if(status==="CHANNEL_ERROR") updateCloudStatus("⚠️ Realtime indisponível","warn");
+    });
+}
+async function handleSession(session){
+  currentUser=session?.user||null;
+  const logout=document.getElementById("logoutBtn");
+  const userEl=document.getElementById("cloudUser");
+
+  if(!currentUser){
+    showAuth(true);
+    if(logout) logout.style.display="none";
+    if(userEl) userEl.textContent="";
+    updateCloudStatus("Login necessário","warn");
+    return;
+  }
+
+  if(logout) logout.style.display="inline-flex";
+  if(userEl) userEl.textContent=currentUser.email||"";
+  showAuth(false);
+  updateCloudStatus("Carregando...", "warn");
+
+  try{
+    await loadCloudCalendar(currentUser);
+    await connectRealtime(currentUser);
+    cloudReady=true;
+    updateCloudStatus("☁️ Sincronizado","ok");
+  }catch(error){
+    console.error(error);
+    updateCloudStatus("⚠️ Verifique o banco Supabase","warn");
+    setAuthMessage(error.message||"Não foi possível carregar o calendário.",true);
+    showAuth(false);
+  }
+}
+async function initCloudSync(){
+  if(!window.APP_CONFIG || !APP_CONFIG.SUPABASE_URL || !APP_CONFIG.SUPABASE_PUBLISHABLE_KEY){
+    showAuth(true);
+    setAuthMessage("Abra config.js e preencha SUPABASE_URL e SUPABASE_PUBLISHABLE_KEY.",true);
+    return;
+  }
+
+  if(!window.supabase || !window.supabase.createClient){
+    showAuth(true);
+    setAuthMessage("Não foi possível carregar o cliente Supabase.",true);
+    return;
+  }
+
+  supabaseClient=window.supabase.createClient(
+    APP_CONFIG.SUPABASE_URL,
+    APP_CONFIG.SUPABASE_PUBLISHABLE_KEY,
+    {
+      auth:{
+        autoRefreshToken:true,
+        persistSession:true,
+        detectSessionInUrl:true
+      }
+    }
+  );
+
+  supabaseClient.auth.onAuthStateChange((_event,session)=>{
+    handleSession(session);
+  });
+
+  const {data,error}=await supabaseClient.auth.getSession();
+  if(error){
+    setAuthMessage(error.message,true);
+    showAuth(true);
+    return;
+  }
+  await handleSession(data.session);
+}
+
+function renderAll() {
+  renderCalendar();
+  updateMetrics();
+}
+
+renderAll();
+renderPattern();
+selectDay(2);
+initCloudSync();
+</script>
+</body>
+</html>
